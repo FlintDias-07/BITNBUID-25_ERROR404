@@ -7,9 +7,9 @@ html
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
-    <span class="badge bg-{{ profile.role == 'client' and 'primary' or 'success' }} fs-6">
-        {{ profile.get_role_display }}
-    </span>
+   <span class="badge bg-{% if profile.role == 'client' %}primary{% else %}success{% endif %} fs-6">
+    {{ profile.get_role_display }}
+</span>
 </div>
 
 {% if profile.role == 'client' %}
@@ -61,9 +61,9 @@ html
                                     </td>
                                     <td>${{ project.budget }}</td>
                                     <td>
-                                        <span class="badge bg-{{ project.status == 'open' and 'success' or project.status == 'closed' and 'warning' or 'secondary' }}">
+                                     <span class="badge bg-{% if project.status == 'open' %}success{% elif project.status == 'closed' %}warning{% else %}secondary{% endif %}">
                                             {{ project.get_status_display }}
-                                        </span>
+                                     </span>
                                     </td>
                                     <td>{{ project.bids.count }}</td>
                                     <td>
@@ -132,9 +132,9 @@ html
                                     </td>
                                     <td>${{ bid.amount }}</td>
                                     <td>
-                                        <span class="badge bg-{{ bid.status == 'pending' and 'warning' or bid.status == 'accepted' and 'success' or 'danger' }}">
-                                            {{ bid.get_status_display }}
-                                        </span>
+                                       <span class="badge bg-{% if bid.status == 'pending' %}warning{% elif bid.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                              {{ bid.get_status_display }}
+                                       </span>
                                     </td>
                                     <td>${{ bid.project.budget }}</td>
                                     <td>

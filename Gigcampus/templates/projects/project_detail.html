@@ -8,9 +8,9 @@
         <div class="card shadow">
             <div class="card-header">
                 <h4 class="mb-0">{{ project.title }}</h4>
-                <span class="badge bg-{{ project.status == 'open' and 'success' or project.status == 'closed' and 'warning' or 'secondary' }}">
-                    {{ project.get_status_display }}
-                </span>
+               <span class="badge bg-{% if project.status == 'open' %}success{% elif project.status == 'closed' %}warning{% else %}secondary{% endif %}">
+                      {{ project.get_status_display }}
+               </span>
             </div>
             <div class="card-body">
                 <div class="project-details mb-4">
@@ -60,8 +60,8 @@
                         <div class="alert alert-info">
                             <strong>Your bid:</strong> ${{ user_bid.amount }}<br>
                             <strong>Status:</strong> 
-                             <span class="badge bg-{{ user_bid.status == 'pending' and 'warning' or user_bid.status == 'accepted' and 'success' or 'danger' }}">
-                                {{ user_bid.get_status_display }}
+                            <span class="badge bg-{% if user_bid.status == 'pending' %}warning{% elif user_bid.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                 {{ user_bid.get_status_display }}
                             </span>
                         </div>
                     {% endif %}
@@ -115,9 +115,9 @@
                                 <div class="text-end">
                                     <span class="text-success fw-bold">${{ bid.amount }}</span>
                                     <br>
-                                    <span class="badge bg-{{ bid.status == 'pending' and 'warning' or bid.status == 'accepted' and 'success' or 'danger' }}">
-                                        {{ bid.get_status_display }}
-                                    </span>
+                                  <span class="badge bg-{% if user_bid.status == 'pending' %}warning{% elif user_bid.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                      {{ user_bid.get_status_display }}
+                                  </span>
                                 </div>
                             </div>
                             <p class="text-muted mb-2">{{ bid.proposal_text|truncatewords:15 }}</p>
