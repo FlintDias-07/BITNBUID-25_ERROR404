@@ -74,7 +74,7 @@ html
                                     <i class="fas fa-calendar"></i> {{ project.created_at|date:"M Y" }}
                                 </span>
                                 <span class="text-success small ms-2">
-                                    <i class="fas fa-dollar-sign"></i> {{ project.bids.filter:status="accepted"|first.amount|default:project.budget }}
+                                    <i class="fas fa-dollar-sign"></i> {{ project.paid_amount }}
                                 </span>
                             </div>
                         </div>

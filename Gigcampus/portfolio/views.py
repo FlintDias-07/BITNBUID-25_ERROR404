@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -7,22 +7,27 @@ from .models import Review
 
 @login_required
 def portfolio(request, username):
-    user = get_object_or_404(User, username=username)
+    freelancer = get_object_or_404(User, username=username)
     
-    if user.profile.role != 'freelancer':
+    if freelancer.profile.role != 'freelancer':
         messages.error(request, 'Portfolio is only available for freelancers.')
         return redirect('dashboard')
     
     completed_projects = Project.objects.filter(
-        bids__freelancer=user,
+        bids__freelancer=freelancer,
         bids__status='accepted',
         status='completed'
-    )
+    ).prefetch_related('bids')
     
-    reviews = Review.objects.filter(freelancer=user).order_by('-created_at')
+    # attach a simple attribute every project can use in template
+    for project in completed_projects:
+        accepted_bid = project.bids.filter(status='accepted').first()
+        project.paid_amount = accepted_bid.amount if accepted_bid else project.budget
+
+    reviews = Review.objects.filter(project__posted_by=freelancer).order_by('-created_at')
     
     context = {
-        'freelancer': user,
+        'freelancer': freelancer,
         'completed_projects': completed_projects,
         'reviews': reviews,
     }

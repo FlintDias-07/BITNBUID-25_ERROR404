@@ -61,7 +61,7 @@ html
                     </div>
                     <div class="col-md-3">
                         <strong>Status:</strong> 
-                        <span class="badge bg-{{ project.status == 'open' and 'success' or project.status == 'closed' and 'warning' or 'secondary' }}">
+                        <span class="badge bg-{% if project.status == 'open' %}success{% elif project.status == 'closed' %}warning{% else %}secondary{% endif %}">
                             {{ project.get_status_display }}
                         </span>
                     </div>
@@ -74,57 +74,57 @@ html
 
 {% block extra_js %}
 <script>
-    const projectId = {{ project_id }};
+    const projectId = "{{ project_id }}";
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + projectId + '/'
+        (window.location.protocol === "https:" ? "wss://" : "ws://")
+        + window.location.host + '/ws/chat/' + projectId + '/'
     );
+
+    chatSocket.onopen = function(e) {
+        console.log('Chat socket opened', e);
+    };
+
+    chatSocket.onerror = function(e) {
+        console.error('Chat socket error', e);
+    };
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         const messagesContainer = document.querySelector('#chat-messages');
-        
         const messageDiv = document.createElement('div');
-        const isCurrentUser = data.username === '{{ user.username }}';
-        
+        const isCurrentUser = data.username === '{{ user.username|escapejs }}';
         messageDiv.className = `message mb-2 ${isCurrentUser ? 'text-end' : ''}`;
         messageDiv.innerHTML = `
             <div class="d-inline-block p-2 rounded ${isCurrentUser ? 'bg-primary text-white' : 'bg-light'}" style="max-width: 70%;">
                 <div class="message-content">${data.message}</div>
-                <small class="text-muted d-block">
-                    <strong>${data.username}</strong> - Just now
-                </small>
+                <small class="text-muted d-block"><strong>${data.username}</strong> - Just now</small>
             </div>
         `;
-        
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
 
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter key
-            document.querySelector('#chat-message-submit').click();
+    function sendMessage(message) {
+        if (chatSocket.readyState !== WebSocket.OPEN) {
+            console.warn('Socket not open, state:', chatSocket.readyState);
+            return;
         }
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': '{{ user.username|escapejs }}'
+        }));
+    }
+
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) document.querySelector('#chat-message-submit').click();
     };
 
     document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-        
-        if (message.trim() !== '') {
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        }
+        const input = document.querySelector('#chat-message-input');
+        const msg = input.value.trim();
+        if (!msg) return;
+        sendMessage(msg);
+        input.value = '';
     };
-
-    // Scroll to bottom on page load
-    const messagesContainer = document.querySelector('#chat-messages');
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 </script>
 {% endblock %}

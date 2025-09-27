@@ -35,7 +35,7 @@
                 <h5>Description</h5>
                 <p>{{ project.description|linebreaks }}</p>
                 
-                {% if user.profile.role == 'freelancer' and project.status == 'open' and form %}
+                {% if user.is_authenticated and user.profile.role == 'freelancer' and project.status == 'open' and form %}
                     <hr>
                     <h5>Submit Your Bid</h5>
                     {% if not user_bid %}
@@ -68,7 +68,13 @@
                 {% endif %}
                 
                 {% if project.status == 'closed' and user.is_authenticated %}
-                    {% if user == project.posted_by or project.bids.filter|length > 0 and project.bids.0.freelancer == user %}
+                    {% if user == project.posted_by %}
+                        <div class="mt-3">
+                            <a href="{% url 'chat_room' project.id %}" class="btn btn-success">
+                                <i class="fas fa-comments"></i> Project Chat
+                            </a>
+                        </div>
+                    {% elif bids|length > 0 and bids.0.freelancer == user %}
                         <div class="mt-3">
                             <a href="{% url 'chat_room' project.id %}" class="btn btn-success">
                                 <i class="fas fa-comments"></i> Project Chat
@@ -87,6 +93,7 @@
             </div>
         </div>
     </div>
+
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
@@ -109,15 +116,15 @@
                                                 {% endif %}
                                             {% endfor %}
                                             ({{ bid.freelancer.profile.rating }})
-                                          </div>
+                                        </div>
                                     {% endif %}
                                 </div>
                                 <div class="text-end">
                                     <span class="text-success fw-bold">${{ bid.amount }}</span>
                                     <br>
-                                  <span class="badge bg-{% if user_bid.status == 'pending' %}warning{% elif user_bid.status == 'accepted' %}success{% else %}danger{% endif %}">
-                                      {{ user_bid.get_status_display }}
-                                  </span>
+                                    <span class="badge bg-{% if bid.status == 'pending' %}warning{% elif bid.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                        {{ bid.get_status_display }}
+                                    </span>
                                 </div>
                             </div>
                             <p class="text-muted mb-2">{{ bid.proposal_text|truncatewords:15 }}</p>
@@ -125,5 +132,13 @@
                             {% if user == project.posted_by and bid.status == 'pending' and project.status == 'open' %}
                                 <a href="{% url 'accept_bid' bid.id %}" class="btn btn-sm btn-success">Accept Bid</a>
                             {% endif %}
-
-
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No bids yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
