@@ -13,19 +13,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data.get('message')
+        message = (data.get('message') or '').strip()
         username = data.get('username', 'Anonymous')
-        # broadcast to group
+
+        # ignore empty messages
+        if not message:
+            return
+
+        # debug log (visible in runserver console)
+        print(f"Received message from {username} for project {self.project_id}: {message}")
+
+        # broadcast to group — use an underscore name that matches the handler
         await self.channel_layer.group_send(
             self.group_name,
             {
-                'type': 'chat.message',
+                'type': 'chat_message',   # must match async def chat_message(...)
                 'message': message,
                 'username': username,
             }
         )
 
     async def chat_message(self, event):
+        # debug log
+        print(f"Broadcasting message to {self.group_name}: {event['message']}")
         await self.send(text_data=json.dumps({
             'message': event['message'],
             'username': event['username'],
