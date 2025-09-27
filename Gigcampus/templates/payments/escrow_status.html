@@ -1,0 +1,71 @@
+## templates/payments/escrow_status.html
+html
+{% extends 'base.html' %}
+
+{% block title %}Escrow Status - GigCampus{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-shield-alt"></i> Escrow Status</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Project Details</h5>
+                        <p><strong>Title:</strong> {{ escrow.bid.project.title }}</p>
+                        <p><strong>Client:</strong> {{ escrow.bid.project.posted_by.username }}</p>
+                        <p><strong>Freelancer:</strong> {{ escrow.bid.freelancer.username }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Payment Information</h5>
+                        <p><strong>Amount:</strong> <span class="text-success">${{ escrow.amount }}</span></p>
+                        <p><strong>Status:</strong> 
+                            <span class="badge bg-{{ escrow.status == 'held' and 'warning' or 'success' }} fs-6">
+                                {{ escrow.get_status_display }}
+                            </span>
+                        </p>
+                        <p><strong>Created:</strong> {{ escrow.created_at|date:"M d, Y H:i" }}</p>
+                        {% if escrow.released_at %}
+                            <p><strong>Released:</strong> {{ escrow.released_at|date:"M d, Y H:i" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if escrow.status == 'held' %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Payment is currently held in escrow.</strong>
+                        {% if user == escrow.bid.project.posted_by %}
+                            Once you're satisfied with the work, you can release the payment to the freelancer.
+                        {% else %}
+                            The client will release payment once they're satisfied with your work.
+                        {% endif %}
+                    </div>
+                    
+                    {% if user == escrow.bid.project.posted_by %}
+                        <div class="text-center">
+                            <a href="{% url 'release_escrow' escrow.id %}" class="btn btn-success btn-lg">
+                                <i class="fas fa-unlock"></i> Release Payment
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Payment has been released!</strong>
+                        The freelancer has received the payment.
+                    </div>
+                {% endif %}
+                <div class="mt-4 text-center">
+                    <a href="{% url 'project_detail' escrow.bid.project.id %}" class="btn btn-outline-primary">
+                        Back to Project
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

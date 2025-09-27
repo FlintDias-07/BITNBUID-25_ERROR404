@@ -1,0 +1,130 @@
+## templates/chat/chat_room.html
+html
+{% extends 'base.html' %}
+
+{% block title %}Chat - {{ project.title }} - GigCampus{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-comments"></i> 
+                    Project Chat: {{ project.title }}
+                </h5>
+                <small>Chat with project participants</small>
+            </div>
+            <div class="card-body" style="height: 500px; overflow-y: auto;" id="chat-messages">
+                {% for message in messages %}
+                    <div class="message mb-2 {% if message.sender == user %}text-end{% endif %}">
+                        <div class="d-inline-block p-2 rounded {% if message.sender == user %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
+                            <div class="message-content">{{ message.content }}</div>
+                            <small class="text-muted d-block">
+                                <strong>{{ message.sender.username }}</strong> - {{ message.timestamp|date:"M d, H:i" }}
+                            </small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center text-muted">
+                        <i class="fas fa-comments fa-3x mb-3"></i>
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="card-footer">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="chat-message-input" placeholder="Type your message...">
+                    <button class="btn btn-primary" type="button" id="chat-message-submit">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h6>Project Information</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Client:</strong> {{ project.posted_by.username }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Budget:</strong> ${{ project.budget }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Deadline:</strong> {{ project.deadline }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Status:</strong> 
+                        <span class="badge bg-{{ project.status == 'open' and 'success' or project.status == 'closed' and 'warning' or 'secondary' }}">
+                            {{ project.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const projectId = {{ project_id }};
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + projectId + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messagesContainer = document.querySelector('#chat-messages');
+        
+        const messageDiv = document.createElement('div');
+        const isCurrentUser = data.username === '{{ user.username }}';
+        
+        messageDiv.className = `message mb-2 ${isCurrentUser ? 'text-end' : ''}`;
+        messageDiv.innerHTML = `
+            <div class="d-inline-block p-2 rounded ${isCurrentUser ? 'bg-primary text-white' : 'bg-light'}" style="max-width: 70%;">
+                <div class="message-content">${data.message}</div>
+                <small class="text-muted d-block">
+                    <strong>${data.username}</strong> - Just now
+                </small>
+            </div>
+        `;
+        
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter key
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        
+        if (message.trim() !== '') {
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    };
+
+    // Scroll to bottom on page load
+    const messagesContainer = document.querySelector('#chat-messages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+</script>
+{% endblock %}

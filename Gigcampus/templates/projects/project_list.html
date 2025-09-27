@@ -1,0 +1,56 @@
+## templates/projects/project_list.html
+html
+{% extends 'base.html' %}
+
+{% block title %}Browse Projects - GigCampus{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-search"></i> Browse Projects</h1>
+    <span class="badge bg-info fs-6">{{ projects.count }} Open Projects</span>
+</div>
+
+{% if projects %}
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            {{ project.description|truncatewords:20 }}
+                        </p>
+                        
+                        <div class="project-meta mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-success fw-bold">${{ project.budget }}</span>
+                                <span class="text-muted small">
+                                    <i class="fas fa-calendar"></i> {{ project.deadline }}
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small">
+                                    <i class="fas fa-user"></i> {{ project.posted_by.username }}
+                                </span>
+                                <span class="badge bg-secondary">
+                                    {{ project.bids.count }} bid{{ project.bids.count|pluralize }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'project_detail' project.id %}" class="btn btn-primary mt-auto">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+        <h3>No projects available</h3>
+        <p class="text-muted">Check back later for new opportunities!</p>
+    </div>
+{% endif %}
+{% endblock %}

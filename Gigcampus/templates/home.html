@@ -1,0 +1,106 @@
+## templates/home.html
+html
+{% extends 'base.html' %}
+
+{% block title %}Welcome to GigCampus{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="display-4 text-primary mb-4">
+            <i class="fas fa-graduation-cap"></i> Welcome to GigCampus
+        </h1>
+        <p class="lead mb-4">The premier freelancing platform for university students</p>
+        <p class="text-muted mb-5">Connect with talented students, post projects, or showcase your skills</p>
+        
+        {% if not user.is_authenticated %}
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-tie fa-3x text-primary mb-3"></i>
+                                    <h5>I'm a Client</h5>
+                                    <p>Post projects and hire talented students</p>
+                                    <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-laptop-code fa-3x text-success mb-3"></i>
+                                    <h5>I'm a Freelancer</h5>
+                                    <p>Find projects and earn money with your skills</p>
+                                    <a href="{% url 'signup' %}" class="btn btn-success">Get Started</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h3>What would you like to do today?</h3>
+                    <div class="row mt-4">
+                        {% if user.profile.role == 'client' %}
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'post_project' %}" class="btn btn-lg btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Post a Project
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-primary w-100">
+                                    <i class="fas fa-dashboard"></i> View Dashboard
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'project_list' %}" class="btn btn-lg btn-success w-100">
+                                    <i class="fas fa-search"></i> Browse Projects
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-success w-100">
+                                    <i class="fas fa-dashboard"></i> View Dashboard
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose GigCampus?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                    <h5>Secure Escrow</h5>
+                    <p>Safe payments with our escrow system protecting both clients and freelancers</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                    <h5>Real-time Chat</h5>
+                    <p>Communicate instantly with project participants using our built-in chat system</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                    <h5>Portfolio & Reviews</h5>
+                    <p>Build your reputation with a comprehensive portfolio and review system</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
