@@ -1336,7 +1336,7 @@ body {
     font-weight: 600;
 }
 
-/* Main Content Adjustments */
+/* Main Content Adjustments - ensure no permanent offset and only shift when offcanvas is visible */
 .main-content {
     margin-top: 56px; /* Navbar height */
     min-height: calc(100vh - 56px);
@@ -1344,95 +1344,38 @@ body {
     transition: margin-left 0.3s ease;
 }
 
+/* No permanent offset when sidebar is not open */
 .main-content.with-sidebar {
-    /* Offset main content when the sidebar is open on desktop */
-    margin-left: 320px;
-    transition: margin-left 0.3s ease;
+    margin-left: 0;
 }
 
-/* Keep no offset on smaller screens */
+/* Shift content only while the offcanvas (sidebar) has the Bootstrap 'show' class.
+   Use adjacent sibling selector because offcanvas is placed directly before <main>. */
+.offcanvas.sidebar-custom.show + .main-content,
+.offcanvas.show + .main-content {
+    margin-left: 320px; /* match sidebar width */
+}
+
+/* Mobile: do not offset content on small screens */
 @media (max-width: 991px) {
-    .main-content.with-sidebar {
+    .offcanvas.sidebar-custom.show + .main-content,
+    .offcanvas.show + .main-content {
         margin-left: 0;
     }
 }
 
-/* Analytics Dashboard Styles */
-.metric-card {
-    border-radius: 20px;
-    padding: 1.5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
+/* Ensure offcanvas custom width */
+.offcanvas.sidebar-custom {
+    width: 320px;
+    max-width: 85%;
 }
 
-.metric-card:hover {
-    transform: translateY(-5px);
+/* Suggested changes */
+body.sidebar-opened .main-content {
+    margin-left: 320px;
 }
-
-.metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-    transform: translate(30px, -30px);
-    z-index: 0;
-}
-
-.metric-content {
-    display: flex;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.metric-icon {
-    font-size: 2.2rem;
-    margin-right: 1rem;
-    opacity: 0.95;
-}
-
-.metric-info h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-}
-
-.metric-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin-bottom: 0.25rem;
-}
-
-.metric-change {
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.metric-change.positive {
-    color: rgba(255, 255, 255, 0.95);
-}
-
-.metric-change.negative {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.metric-card.bg-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.metric-card.bg-success {
-    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-}
-
-.metric-card.bg-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #0f8fa6 100%);
+@media (max-width: 991px) {
+    body.sidebar-opened .main-content { margin-left: 0; }
 }
 
 /* keep previously defined responsive and utility rules intact */

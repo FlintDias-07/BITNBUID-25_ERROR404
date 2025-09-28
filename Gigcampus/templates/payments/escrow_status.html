@@ -22,10 +22,14 @@ html
                     <div class="col-md-6">
                         <h5>Payment Information</h5>
                         <p><strong>Amount:</strong> <span class="text-success">${{ escrow.amount }}</span></p>
-                        <p><strong>Status:</strong> 
-                            <span class="badge bg-{{ escrow.status == 'held' and 'warning' or 'success' }} fs-6">
-                                {{ escrow.get_status_display }}
-                            </span>
+                        <p><strong>Status:</strong>
+                            {% if escrow.status == 'held' %}
+                                <span class="badge bg-warning fs-6">{{ escrow.get_status_display }}</span>
+                            {% elif escrow.status == 'released' %}
+                                <span class="badge bg-success fs-6">{{ escrow.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary fs-6">{{ escrow.get_status_display }}</span>
+                            {% endif %}
                         </p>
                         <p><strong>Created:</strong> {{ escrow.created_at|date:"M d, Y H:i" }}</p>
                         {% if escrow.released_at %}
@@ -47,9 +51,12 @@ html
                     
                     {% if user == escrow.bid.project.posted_by %}
                         <div class="text-center">
-                            <a href="{% url 'release_escrow' escrow.id %}" class="btn btn-success btn-lg">
-                                <i class="fas fa-unlock"></i> Release Payment
-                            </a>
+                            <form method="post" action="{% url 'release_escrow' escrow.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-unlock"></i> Release Payment
+                                </button>
+                            </form>
                         </div>
                     {% endif %}
                 {% else %}
