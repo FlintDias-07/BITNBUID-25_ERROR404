@@ -1,0 +1,314 @@
+## templates/analytics.html (New Analytics Dashboard)
+html
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - GigCampus{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0"><i class="fas fa-chart-line text-primary me-2"></i>Analytics Dashboard</h1>
+                    <p class="text-muted mb-0">Track your performance and market insights</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm" id="timeRange">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 3 months</option>
+                        <option value="365">Last year</option>
+                    </select>
+                    <button class="btn btn-outline-primary btn-sm" id="exportData">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card bg-primary">
+                <div class="metric-content">
+                    <div class="metric-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 class="metric-value" id="totalProjects">{{ total_projects }}</h3>
+                        <p class="metric-label">Total Projects</p>
+                        <span class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i> +12% vs last month
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card bg-success">
+                <div class="metric-content">
+                    <div class="metric-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 class="metric-value" id="totalEarnings">${{ total_earnings }}</h3>
+                        <p class="metric-label">Total Earnings</p>
+                        <span class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i> +8.5% vs last month
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card bg-info">
+                <div class="metric-content">
+                    <div class="metric-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 class="metric-value" id="avgRating">{{ avg_rating }}</h3>
+                        <p class="metric-label">Average Rating</p>
+                        <span class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i> +0.2 vs last month
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card bg-warning">
+                <div class="metric-content">
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3 class="metric-value" id="responseTime">2.3h</h3>
+                        <p class="metric-label">Avg Response Time</p>
+                        <span class="metric-change negative">
+                            <i class="fas fa-arrow-down"></i> -15% vs last month
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Earnings Chart -->
+        <div class="col-lg-8">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-chart-area text-primary me-2"></i>Earnings Overview</h5>
+                        <div class="chart-controls">
+                            <button class="btn btn-outline-primary btn-sm active" data-chart="earnings">Earnings</button>
+                            <button class="btn btn-outline-secondary btn-sm" data-chart="projects">Projects</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="earningsChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Field Demand Chart -->
+        <div class="col-lg-4">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie text-success me-2"></i>Field Demand</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="fieldDemandChart" height="300"></canvas>
+                    <div class="demand-legend mt-3">
+                        <div class="legend-item">
+                            <span class="legend-color bg-primary"></span>
+                            <span class="legend-text">Web Development (35%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color bg-success"></span>
+                            <span class="legend-text">Design (25%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color bg-warning"></span>
+                            <span class="legend-text">Content Writing (20%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color bg-info"></span>
+                            <span class="legend-text">Data Analysis (12%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color bg-secondary"></span>
+                            <span class="legend-text">Others (8%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills & Market Insights -->
+    <div class="row g-4 mb-4">
+        <!-- Skills Performance -->
+        <div class="col-lg-6">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-brain text-info me-2"></i>Skills Performance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="skill-item mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="skill-name">JavaScript</span>
+                            <span class="skill-score">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 92%"></div>
+                        </div>
+                        <small class="text-muted">High demand • $45/hr avg</small>
+                    </div>
+                    
+                    <div class="skill-item mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="skill-name">UI/UX Design</span>
+                            <span class="skill-score">87%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 87%"></div>
+                        </div>
+                        <small class="text-muted">Very high demand • $40/hr avg</small>
+                    </div>
+                    
+                    <div class="skill-item mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="skill-name">Python</span>
+                            <span class="skill-score">78%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 78%"></div>
+                        </div>
+                        <small class="text-muted">Medium demand • $42/hr avg</small>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'skills_assessment' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Take Skills Assessment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Trends -->
+        <div class="col-lg-6">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-trending-up text-warning me-2"></i>Market Trends</h5>
+                </div>
+                <div class="card-body">
+                    <div class="trend-item mb-4">
+                        <div class="trend-header">
+                            <h6 class="trend-title">AI/Machine Learning</h6>
+                            <span class="trend-badge hot">🔥 Hot</span>
+                        </div>
+                        <p class="trend-description">Growing 45% month-over-month. Average rate: $60/hr</p>
+                        <div class="trend-stats">
+                            <span class="stat-item"><i class="fas fa-arrow-up text-success"></i> +45%</span>
+                            <span class="stat-item"><i class="fas fa-dollar-sign text-primary"></i> $60/hr</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trend-item mb-4">
+                        <div class="trend-header">
+                            <h6 class="trend-title">Mobile App Development</h6>
+                            <span class="trend-badge trending">📈 Trending</span>
+                        </div>
+                        <p class="trend-description">Steady growth with React Native and Flutter leading. Average rate: $48/hr</p>
+                        <div class="trend-stats">
+                            <span class="stat-item"><i class="fas fa-arrow-up text-success"></i> +23%</span>
+                            <span class="stat-item"><i class="fas fa-dollar-sign text-primary"></i> $48/hr</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trend-item">
+                        <div class="trend-header">
+                            <h6 class="trend-title">Content Creation</h6>
+                            <span class="trend-badge stable">📊 Stable</span>
+                        </div>
+                        <p class="trend-description">Consistent demand across industries. Average rate: $25/hr</p>
+                        <div class="trend-stats">
+                            <span class="stat-item"><i class="fas fa-minus text-warning"></i> +5%</span>
+                            <span class="stat-item"><i class="fas fa-dollar-sign text-primary"></i> $25/hr</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar text-secondary me-2"></i>Project Performance</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="projectPerformanceChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bell text-info me-2"></i>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>Project Completed</h6>
+                                <p>E-commerce website for startup</p>
+                                <small class="text-muted">2 hours ago</small>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>New Bid Submitted</h6>
+                                <p>Mobile app design project</p>
+                                <small class="text-muted">5 hours ago</small>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>5-Star Review Received</h6>
+                                <p>Client loved the website design</p>
+                                <small class="text-muted">1 day ago</small>
+                            </div>
+                        </div>
+                        
+                 + Math.floor(current).toLocaleString();
+            }, 20);
+        }
+    }, 500);
+});
+</script>
+{% endblock %}

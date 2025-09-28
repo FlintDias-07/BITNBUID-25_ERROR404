@@ -151,5 +151,65 @@ def get_user_preferences(request):
     }
     return JsonResponse(preferences)
 
+
 def about_view(request):
     return render(request, 'about.html')
+
+@login_required
+def analytics_view(request):
+    profile = request.user.profile
+    
+    # Calculate analytics data
+    if profile.role == 'client':
+        total_projects = Project.objects.filter(posted_by=request.user).count()
+        total_spent = sum(p.budget for p in Project.objects.filter(posted_by=request.user, status='completed'))
+        avg_rating = 4.5  # Calculate from reviews
+    else:
+        total_projects = Bid.objects.filter(freelancer=request.user, status='accepted').count()
+        total_spent = sum(b.amount for b in Bid.objects.filter(freelancer=request.user, status='accepted', project__status='completed'))
+        avg_rating = profile.rating
+    
+    context = {
+        'total_projects': total_projects,
+        'total_earnings': total_spent,
+        'avg_rating': avg_rating,
+    }
+    return render(request, 'analytics.html', context)
+
+@login_required
+def field_demand_view(request):
+    return render(request, 'field_demand.html')
+
+@login_required
+def skills_assessment_view(request):
+    return render(request, 'skills_assessment.html')
+
+@login_required
+def earnings_tracker_view(request):
+    return render(request, 'earnings_tracker.html')
+
+@login_required
+def my_projects_view(request):
+    projects = Project.objects.filter(posted_by=request.user)
+    return render(request, 'my_projects.html', {'projects': projects})
+
+@login_required
+def my_bids_view(request):
+    bids = Bid.objects.filter(freelancer=request.user)
+    return render(request, 'my_bids.html', {'bids': bids})
+
+@login_required
+def messages_view(request):
+    return render(request, 'messages.html')
+
+@login_required
+def activity_log_view(request):
+    return render(request, 'activity_log.html')
+
+@login_required
+def help_view(request):
+    return render(request, 'help.html')
+
+@login_required
+def upgrade_view(request):
+    return render(request, 'upgrade.html')

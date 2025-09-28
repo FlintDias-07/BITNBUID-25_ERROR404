@@ -1,0 +1,397 @@
+## templates/field_demand.html (Market Analysis Page)
+html
+{% extends 'base.html' %}
+
+{% block title %}Field Demand Analysis - GigCampus{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header mb-4">
+                <h1 class="h3 mb-0"><i class="fas fa-trending-up text-primary me-2"></i>Field Demand Analysis</h1>
+                <p class="text-muted">Discover high-demand skills and market opportunities</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Overview Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+            <div class="demand-card hot">
+                <div class="demand-header">
+                    <h6 class="demand-title">🔥 Hottest Field</h6>
+                </div>
+                <div class="demand-content">
+                    <h4 class="field-name">AI & Machine Learning</h4>
+                    <div class="demand-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">+67%</span>
+                            <span class="stat-label">Growth Rate</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">$75/hr</span>
+                            <span class="stat-label">Avg. Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="demand-card trending">
+                <div class="demand-header">
+                    <h6 class="demand-title">📈 Most Growth</h6>
+                </div>
+                <div class="demand-content">
+                    <h4 class="field-name">Blockchain Development</h4>
+                    <div class="demand-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">+54%</span>
+                            <span class="stat-label">Growth Rate</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">$68/hr</span>
+                            <span class="stat-label">Avg. Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="demand-card stable">
+                <div class="demand-header">
+                    <h6 class="demand-title">💼 Most Projects</h6>
+                </div>
+                <div class="demand-content">
+                    <h4 class="field-name">Web Development</h4>
+                    <div class="demand-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">2,341</span>
+                            <span class="stat-label">Active Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">$45/hr</span>
+                            <span class="stat-label">Avg. Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="demand-card opportunity">
+                <div class="demand-header">
+                    <h6 class="demand-title">💡 Best Entry Point</h6>
+                </div>
+                <div class="demand-content">
+                    <h4 class="field-name">Content Writing</h4>
+                    <div class="demand-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">Easy</span>
+                            <span class="stat-label">Entry Level</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">$28/hr</span>
+                            <span class="stat-label">Avg. Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Analysis -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-line text-success me-2"></i>Market Demand Trends</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="demandTrendsChart" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bullseye text-warning me-2"></i>Skill Recommendations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="recommendation-list">
+                        <div class="recommendation-item high">
+                            <div class="rec-priority">High Priority</div>
+                            <h6 class="rec-skill">React.js</h6>
+                            <p class="rec-reason">High demand, good rates, matches your JavaScript skills</p>
+                            <div class="rec-stats">
+                                <span class="rec-stat">Demand: 95%</span>
+                                <span class="rec-stat">Rate: $48/hr</span>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-item medium">
+                            <div class="rec-priority">Medium Priority</div>
+                            <h6 class="rec-skill">Python Data Analysis</h6>
+                            <p class="rec-reason">Growing field with good career prospects</p>
+                            <div class="rec-stats">
+                                <span class="rec-stat">Demand: 78%</span>
+                                <span class="rec-stat">Rate: $52/hr</span>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-item low">
+                            <div class="rec-priority">Consider</div>
+                            <h6 class="rec-skill">Digital Marketing</h6>
+                            <p class="rec-reason">Broad applications, good for portfolio diversity</p>
+                            <div class="rec-stats">
+                                <span class="rec-stat">Demand: 65%</span>
+                                <span class="rec-stat">Rate: $35/hr</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Matrix -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-table text-info me-2"></i>Skills Demand Matrix</h5>
+                        <div class="matrix-controls">
+                            <button class="btn btn-outline-primary btn-sm active" data-sort="demand">Sort by Demand</button>
+                            <button class="btn btn-outline-secondary btn-sm" data-sort="rate">Sort by Rate</button>
+                            <button class="btn btn-outline-info btn-sm" data-sort="growth">Sort by Growth</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table skills-matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Skill</th>
+                                    <th>Demand Level</th>
+                                    <th>Avg. Hourly Rate</th>
+                                    <th>Growth Rate</th>
+                                    <th>Entry Difficulty</th>
+                                    <th>Active Projects</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="skillsMatrixBody">
+                                <tr data-skill="ai-ml">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fas fa-brain text-primary me-2"></i>
+                                            <strong>AI & Machine Learning</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge very-high">Very High</span></td>
+                                    <td><strong>$75/hr</strong></td>
+                                    <td class="growth-positive">+67%</td>
+                                    <td><span class="difficulty-badge hard">Hard</span></td>
+                                    <td>142</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="blockchain">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fab fa-bitcoin text-warning me-2"></i>
+                                            <strong>Blockchain Development</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge high">High</span></td>
+                                    <td><strong>$68/hr</strong></td>
+                                    <td class="growth-positive">+54%</td>
+                                    <td><span class="difficulty-badge hard">Hard</span></td>
+                                    <td>89</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="react">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fab fa-react text-info me-2"></i>
+                                            <strong>React.js Development</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge very-high">Very High</span></td>
+                                    <td><strong>$48/hr</strong></td>
+                                    <td class="growth-positive">+42%</td>
+                                    <td><span class="difficulty-badge medium">Medium</span></td>
+                                    <td>456</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="ux-design">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fas fa-paint-brush text-success me-2"></i>
+                                            <strong>UX/UI Design</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge high">High</span></td>
+                                    <td><strong>$45/hr</strong></td>
+                                    <td class="growth-positive">+38%</td>
+                                    <td><span class="difficulty-badge medium">Medium</span></td>
+                                    <td>312</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="mobile-dev">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fas fa-mobile-alt text-secondary me-2"></i>
+                                            <strong>Mobile App Development</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge high">High</span></td>
+                                    <td><strong>$52/hr</strong></td>
+                                    <td class="growth-positive">+35%</td>
+                                    <td><span class="difficulty-badge medium">Medium</span></td>
+                                    <td>234</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="data-science">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fas fa-chart-bar text-info me-2"></i>
+                                            <strong>Data Science</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge medium">Medium</span></td>
+                                    <td><strong>$58/hr</strong></td>
+                                    <td class="growth-positive">+28%</td>
+                                    <td><span class="difficulty-badge hard">Hard</span></td>
+                                    <td>156</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                                <tr data-skill="content-writing">
+                                    <td>
+                                        <div class="skill-info">
+                                            <i class="fas fa-pen text-primary me-2"></i>
+                                            <strong>Content Writing</strong>
+                                        </div>
+                                    </td>
+                                    <td><span class="demand-badge medium">Medium</span></td>
+                                    <td><strong>$28/hr</strong></td>
+                                    <td class="growth-positive">+15%</td>
+                                    <td><span class="difficulty-badge easy">Easy</span></td>
+                                    <td>678</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm">Learn More</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Demand Trends Chart
+    const trendsCtx = document.getElementById('demandTrendsChart').getContext('2d');
+    const trendsChart = new Chart(trendsCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [
+                {
+                    label: 'AI/ML',
+                    data: [20, 25, 32, 45, 58, 67, 75],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4
+                },
+                {
+                    label: 'Web Development',
+                    data: [35, 38, 42, 40, 43, 45, 48],
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4
+                },
+                {
+                    label: 'UX Design',
+                    data: [25, 28, 30, 35, 38, 42, 45],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4
+                },
+                {
+                    label: 'Content Writing',
+                    data: [22, 24, 26, 25, 27, 28, 30],
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Average Hourly Rate ($)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Months (2024)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Skills Matrix Sorting
+    const sortButtons = document.querySelectorAll('[data-sort]');
+    const skillsTableBody = document.getElementById('skillsMatrixBody');
+
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            sortButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const sortBy = this.getAttribute('data-sort');
+            // Add sorting logic here
+            console.log('Sorting by:', sortBy);
+        });
+    });
+});
+</script>
+{% endblock %}
