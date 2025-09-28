@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}About GigCampus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="display-4 text-center mb-5">About GigCampus</h1>
+            
+            <div class="card shadow mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-primary">Our Mission</h2>
+                    <p class="lead mb-4">
+                        GigCampus is dedicated to empowering university students by connecting them with meaningful 
+                        freelancing opportunities that complement their academic journey.
+                    </p>
+                    <p class="mb-4">
+                        We believe that students should have access to flexible work opportunities that not only 
+                        provide financial support but also help them build professional skills, expand their network, 
+                        and gain real-world experience in their field of study.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                            <h4>For Students</h4>
+                            <p>Find flexible projects that fit your schedule and expertise. Build your portfolio while earning money for your education.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-briefcase fa-3x text-success mb-3"></i>
+                            <h4>For Clients</h4>
+                            <p>Access talented, motivated students who bring fresh perspectives and cutting-edge skills to your projects.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-primary">Why GigCampus?</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Student-Focused:</strong> Built specifically for the university community
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Secure Payments:</strong> Escrow system protects all parties
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Real-time Chat:</strong> Instant communication with clients
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Portfolio Building:</strong> Showcase your completed work
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Review System:</strong> Build your professional reputation
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Flexible Schedule:</strong> Work around your class schedule
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-primary">Our Story</h2>
+                    <p class="mb-4">
+                        Founded by students, for students, GigCampus was born out of the recognition that university 
+                        students have incredible talent and skills, but often struggle to find work opportunities 
+                        that respect their academic commitments and irregular schedules.
+                    </p>
+                    <p class="mb-4">
+                        Our platform bridges the gap between talented students and clients who need high-quality 
+                        work done. We've created a safe, secure environment where students can build their 
+                        professional reputation while clients can access a pool of motivated, skilled freelancers.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow border-primary">
+                <div class="card-body p-5 text-center">
+                    <h2 class="h3 mb-4 text-primary">Join Our Community</h2>
+                    <p class="mb-4">
+                        Ready to start your freelancing journey or find talented students for your projects?
+                    </p>
+                    {% if not user.is_authenticated %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg me-md-2">Get Started as Freelancer</a>
+                            <a href="{% url 'signup' %}" class="btn btn-success btn-lg">Post a Project</a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

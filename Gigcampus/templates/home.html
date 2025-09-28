@@ -1,5 +1,3 @@
-## templates/home.html
-html
 {% extends 'base.html' %}
 
 {% block title %}Welcome to GigCampus{% endblock %}
@@ -7,11 +5,11 @@ html
 {% block content %}
 <div class="hero-section text-center py-5 mb-5">
     <div class="container">
-        <h1 class="display-4 text-primary mb-4">
+        <h1 class="display-4 text-white mb-4">
             <i class="fas fa-graduation-cap"></i> Welcome to GigCampus
         </h1>
-        <p class="lead mb-4">The premier freelancing platform for university students</p>
-        <p class="text-muted mb-5">Connect with talented students, post projects, or showcase your skills</p>
+        <p class="lead mb-4 text-white">The premier freelancing platform for university students</p>
+        <p class="text-light mb-5">Connect with talented students, post projects, or showcase your skills</p>
         
         {% if not user.is_authenticated %}
             <div class="row justify-content-center">
@@ -43,27 +41,27 @@ html
         {% else %}
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <h3>What would you like to do today?</h3>
+                    <h3 class="text-white">What would you like to do today?</h3>
                     <div class="row mt-4">
                         {% if user.profile.role == 'client' %}
                             <div class="col-md-6 mb-3">
-                                <a href="{% url 'post_project' %}" class="btn btn-lg btn-primary w-100">
+                                <a href="{% url 'post_project' %}" class="btn btn-lg btn-light w-100 text-primary fw-bold">
                                     <i class="fas fa-plus"></i> Post a Project
                                 </a>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-primary w-100">
+                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-light w-100">
                                     <i class="fas fa-dashboard"></i> View Dashboard
                                 </a>
                             </div>
                         {% else %}
                             <div class="col-md-6 mb-3">
-                                <a href="{% url 'project_list' %}" class="btn btn-lg btn-success w-100">
+                                <a href="{% url 'project_list' %}" class="btn btn-lg btn-light w-100 text-success fw-bold">
                                     <i class="fas fa-search"></i> Browse Projects
                                 </a>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-success w-100">
+                                <a href="{% url 'dashboard' %}" class="btn btn-lg btn-outline-light w-100">
                                     <i class="fas fa-dashboard"></i> View Dashboard
                                 </a>
                             </div>
@@ -75,29 +73,128 @@ html
     </div>
 </div>
 
+<!-- Student Success Stories with Photos -->
+<div class="student-stories-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Student Success Stories</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card story-card h-100">
+                    <img src="https://freelancinghacks.com/wp-content/uploads/2023/09/online-freelance-jobs-for-students-768x461.jpg" 
+                         class="card-img-top story-image" alt="Online Freelance Jobs for Students">
+                    <div class="card-body">
+                        <h5 class="card-title">Find Your Perfect Freelance Opportunity</h5>
+                        <p class="card-text">Join thousands of students who are earning money while studying. 
+                        From web development to content writing, find projects that match your skills.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card story-card h-100">
+                    <img src="https://bloggerspassion.com/wp-content/uploads/2019/12/online-jobs-for-students-1024x536.jpg" 
+                         class="card-img-top story-image" alt="Online Jobs for Students">
+                    <div class="card-body">
+                        <h5 class="card-title">Build Your Career While Studying</h5>
+                        <p class="card-text">Start building your professional portfolio today. 
+                        Gain real-world experience and earn money for your education.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
 <div class="features-section">
     <div class="container">
         <h2 class="text-center mb-5">Why Choose GigCampus?</h2>
         <div class="row">
             <div class="col-md-4 mb-4">
-                <div class="text-center">
+                <div class="text-center feature-item">
                     <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
                     <h5>Secure Escrow</h5>
                     <p>Safe payments with our escrow system protecting both clients and freelancers</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="text-center">
+                <div class="text-center feature-item">
                     <i class="fas fa-comments fa-3x text-primary mb-3"></i>
                     <h5>Real-time Chat</h5>
                     <p>Communicate instantly with project participants using our built-in chat system</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="text-center">
+                <div class="text-center feature-item">
                     <i class="fas fa-star fa-3x text-warning mb-3"></i>
                     <h5>Portfolio & Reviews</h5>
                     <p>Build your reputation with a comprehensive portfolio and review system</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Earn While You Learn Section -->
+<div class="earn-learn-section py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4">
+                <img src="https://article.fieldengineer.com/content/images/2023/05/Earn-While-You-Learn-Best-Online-Jobs-for-Students-1-1.jpg" 
+                     class="img-fluid rounded shadow" alt="Earn While You Learn">
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4">Earn While You Learn</h2>
+                <p class="lead mb-4">Transform your skills into income opportunities</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Flexible working hours</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Build professional network</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></li> Gain real-world experience</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Earn money for education</li>
+                </ul>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Start Earning Today</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Opportunities Section -->
+<div class="mobile-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 order-md-2 mb-4">
+                <img src="https://tse4.mm.bing.net/th/id/OIP.-ScGlWFV8tWkPDAMnzVv9wAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" 
+                     class="img-fluid rounded shadow" alt="Mobile Freelancing">
+            </div>
+            <div class="col-md-6 order-md-1">
+                <h2 class="mb-4">Work From Anywhere</h2>
+                <p class="lead mb-4">Access opportunities on any device, anytime</p>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-mobile-alt fa-2x text-primary mb-2"></i>
+                            <p><strong>Mobile Ready</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                            <p><strong>24/7 Access</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-globe fa-2x text-info mb-2"></i>
+                            <p><strong>Global Reach</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="text-center">
+                            <i class="fas fa-users fa-2x text-warning mb-2"></i>
+                            <p><strong>Student Community</strong></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

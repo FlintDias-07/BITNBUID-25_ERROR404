@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - GigCampus{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4"><i class="fas fa-cog"></i> Settings</h1>
+    
+    <div class="row">
+        <!-- Settings Navigation -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Settings Menu</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="#profile" class="list-group-item list-group-item-action active" data-bs-toggle="pill">
+                        <i class="fas fa-user"></i> Profile Settings
+                    </a>
+                    <a href="#account" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-lock"></i> Account Security
+                    </a>
+                    <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-bell"></i> Notifications
+                    </a>
+                    <a href="#preferences" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-sliders-h"></i> Preferences
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Content -->
+        <div class="col-md-9">
+            <div class="tab-content">
+                <!-- Profile Settings -->
+                <div class="tab-pane fade show active" id="profile">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5><i class="fas fa-user"></i> Profile Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'update_profile' %}">
+                                {% csrf_token %}
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">First Name</label>
+                                        {{ profile_form.first_name }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Last Name</label>
+                                        {{ profile_form.last_name }}
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    {{ profile_form.email }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Bio</label>
+                                    {{ profile_form.bio }}
+                                    <div class="form-text">Tell clients about your skills and experience</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Role</label>
+                                    <select class="form-select" disabled>
+                                        <option value="{{ user.profile.role }}">{{ user.profile.get_role_display }}</option>
+                                    </select>
+                                    <div class="form-text">Contact support to change your role</div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Security -->
+                <div class="tab-pane fade" id="account">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5><i class="fas fa-lock"></i> Account Security</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">Change Password</h6>
+                            <form method="post" action="{% url 'change_password' %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Current Password</label>
+                                    {{ password_form.old_password }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">New Password</label>
+                                    {{ password_form.new_password1 }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm New Password</label>
+                                    {{ password_form.new_password2 }}
+                                </div>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-key"></i> Change Password
+                                </button>
+                            </form>
+                            
+                            <hr class="my-4">
+                            
+                            <h6 class="mb-3 text-danger">Danger Zone</h6>
+                            <div class="border border-danger rounded p-3">
+                                <h6 class="text-danger">Delete Account</h6>
+                                <p class="text-muted mb-3">Once you delete your account, there is no going back.</p>
+                                <button class="btn btn-outline-danger" onclick="confirmDeleteAccount()">
+                                    <i class="fas fa-trash"></i> Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5><i class="fas fa-bell"></i> Notification Preferences</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'update_notifications' %}">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <h6>Email Notifications</h6>
+                                    <div class="form-check">
+                                        {{ notification_form.email_projects }}
+                                        <label class="form-check-label" for="{{ notification_form.email_projects.id_for_label }}">
+                                            New project notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        {{ notification_form.email_bids }}
+                                        <label class="form-check-label" for="{{ notification_form.email_bids.id_for_label }}">
+                                            Bid status updates
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        {{ notification_form.email_messages }}
+                                        <label class="form-check-label" for="{{ notification_form.email_messages.id_for_label }}">
+                                            New messages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        {{ notification_form.email_payments }}
+                                        <label class="form-check-label" for="{{ notification_form.email_payments.id_for_label }}">
+                                            Payment notifications
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h6>Push Notifications</h6>
+                                    <div class="form-check">
+                                        {{ notification_form.push_messages }}
+                                        <label class="form-check-label" for="{{ notification_form.push_messages.id_for_label }}">
+                                            New chat messages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        {{ notification_form.push_bids }}
+                                        <label class="form-check-label" for="{{ notification_form.push_bids.id_for_label }}">
+                                            Bid updates
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Preferences
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preferences -->
+                <div class="tab-pane fade" id="preferences">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5><i class="fas fa-sliders-h"></i> Platform Preferences</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'update_platform_preferences' %}" id="preferencesForm">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <h6>Display Settings</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">Theme</label>
+                                        {{ platform_form.theme }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Language</label>
+                                        {{ platform_form.language }}
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h6>Privacy Settings</h6>
+                                    <div class="form-check">
+                                        {{ platform_form.profile_public }}
+                                        <label class="form-check-label" for="{{ platform_form.profile_public.id_for_label }}">
+                                            Make profile publicly visible
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        {{ platform_form.show_online_status }}
+                                        <label class="form-check-label" for="{{ platform_form.show_online_status.id_for_label }}">
+                                            Show online status
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Preferences
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Theme change handler
+    const themeSelect = document.getElementById('{{ platform_form.theme.id_for_label }}');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            applyTheme(this.value);
+        });
+        
+        // Apply current theme on page load
+        applyTheme(themeSelect.value);
+    }
+    
+    // Language change handler
+    const languageSelect = document.getElementById('{{ platform_form.language.id_for_label }}');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', function() {
+            // You can implement language switching logic here
+            console.log('Language changed to:', this.value);
+        });
+    }
+    
+    // Auto-save preferences on change
+    const preferencesForm = document.getElementById('preferencesForm');
+    const checkboxes = preferencesForm.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Auto-save after a short delay
+            setTimeout(() => {
+                savePreferences();
+            }, 1000);
+        });
+    });
+});
+
+function applyTheme(theme) {
+    const body = document.body;
+    
+    // Remove existing theme classes
+    body.classList.remove('theme-light', 'theme-dark', 'theme-auto');
+    
+    if (theme === 'dark') {
+        body.classList.add('theme-dark');
+    } else if (theme === 'auto') {
+        // Check system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        body.classList.add(prefersDark ? 'theme-dark' : 'theme-light');
+    } else {
+        body.classList.add('theme-light');
+    }
+}
+
+function savePreferences() {
+    const formData = new FormData(document.getElementById('preferencesForm'));
+    
+    fetch('{% url "update_platform_preferences" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Preferences saved!', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving preferences:', error);
+    });
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification toast
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
+
+function confirmDeleteAccount() {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+            // Implement account deletion logic
+            alert('Account deletion feature will be implemented with proper backend handling.');
+        }
+    }
+}
+</script>
+{% endblock %}
