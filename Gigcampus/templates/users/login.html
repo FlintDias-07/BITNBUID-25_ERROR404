@@ -2,6 +2,8 @@
 html
 {% extends 'base.html' %}
 
+{% load socialaccount %}
+
 {% block title %}Login - GigCampus{% endblock %}
 
 {% block content %}
@@ -12,6 +14,12 @@ html
                 <h4 class="mb-0"><i class="fas fa-sign-in-alt"></i> Login</h4>
             </div>
             <div class="card-body">
+               <!-- Google Login button -->
+                <div class="mb-3">
+                  <a class="btn btn-outline-danger w-100" href="{% provider_login_url 'google' %}">
+                      <i class="fab fa-google"></i> Login with Google
+                  </a>
+                </div>
                 <form method="post">
                     {% csrf_token %}
                     

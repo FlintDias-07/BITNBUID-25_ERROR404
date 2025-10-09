@@ -14,6 +14,13 @@ import json
 from .forms import ProfileUpdateForm, NotificationPreferencesForm, PlatformPreferencesForm
 from .models import Profile
 
+def get_or_create_profile(user):
+    from .models import Profile
+    try:
+        return user.profile
+    except Profile.DoesNotExist:
+        return Profile.objects.create(user=user)
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -31,7 +38,8 @@ class CustomLoginView(LoginView):
 
 @login_required
 def dashboard(request):
-    profile = request.user.profile
+    profile = get_or_create_profile(request.user)
+
     context = {'profile': profile}
     
     if profile.role == 'client':
@@ -42,7 +50,8 @@ def dashboard(request):
     return render(request, 'users/dashboard.html', context)
 @login_required
 def settings_view(request):
-    profile = request.user.profile
+    profile = get_or_create_profile(request.user)
+
     
     # Initialize forms
     profile_form = ProfileUpdateForm(instance=profile, user=request.user)
@@ -134,7 +143,7 @@ def change_password(request):
 @login_required
 def get_user_preferences(request):
     """API endpoint to get user preferences for JavaScript"""
-    profile = request.user.profile
+    profile = get_or_create_profile(request.user)
     preferences = {
         'theme': profile.theme,
         'language': profile.language,

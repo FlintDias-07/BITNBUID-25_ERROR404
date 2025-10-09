@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n socialaccount %}
+
+{% block title %}Sign In Via Google{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">{% trans "Sign In Via Google" %}</h4>
+            </div>
+            <div class="card-body text-center">
+                <p>{% trans "You are about to sign in using a third-party account from Google." %}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">{% trans "Continue" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
