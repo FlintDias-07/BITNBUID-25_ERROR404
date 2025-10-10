@@ -5,7 +5,7 @@ from projects.models import Project  # Change 'projects' to your real app name
 
 @login_required
 def analytics(request):
-    if not hasattr(request.user, 'profile') or request.user.profile.role != 'client':
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'freelancer':
         return redirect('home')
     # Aggregate your real field data from Project or another model
     field_labels = ['Web Development', 'Design', 'Content Writing', 'Data Analysis', 'Others']
@@ -31,7 +31,7 @@ def analytics(request):
 
 @login_required
 def field_demand(request):
-    if not hasattr(request.user, 'profile') or request.user.profile.role != 'client':
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'freelancer':
         return redirect('home')
     return render(request, 'field_demand.html')   # Reuse the analytics view logic or make a separate one if you want
 
