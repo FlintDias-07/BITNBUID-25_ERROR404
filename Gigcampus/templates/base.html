@@ -66,9 +66,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'project_list' %}">Browse Projects</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'field_demand' %}">Field Demand</a>
-                    </li>
+                    {% if request.user.is_authenticated and request.user.profile.role == 'client' %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics' %}">Analytics</a></li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'field_demand' %}">Field Demand</a></li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>

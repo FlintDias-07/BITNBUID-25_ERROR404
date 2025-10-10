@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('users/', include('users.urls')),
     path('field-demand/', views.field_demand, name='field_demand'),
+    path('analytics/', views.analytics, name='analytics'),
     path('projects/', include('projects.urls')),
     path('payments/', include('payments.urls')),
     path('chat/', include('chat.urls')),

@@ -49,4 +49,4 @@ from django.contrib.auth.models import User
 def create_user_profile(sender, instance, created, **kwargs):
     from .models import Profile
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.get_or_create(user=instance)
