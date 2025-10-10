@@ -1,4 +1,7 @@
 import json
+from .models import Message
+from django.contrib.auth.models import User
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer  # type: ignore
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -10,33 +13,36 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
-
+    
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = (data.get('message') or '').strip()
+        content = data.get('message', '').strip()
         username = data.get('username', 'Anonymous')
+        user = self.scope["user"]
+        project_id = self.project_id
 
-        # ignore empty messages
-        if not message:
+        if not content:
             return
 
-        # debug log (visible in runserver console)
-        print(f"Received message from {username} for project {self.project_id}: {message}")
+        # Save message to DB
+        await self.save_message(user, project_id, content)
 
-        # broadcast to group — use an underscore name that matches the handler
+        # Broadcast to group
         await self.channel_layer.group_send(
             self.group_name,
             {
-                'type': 'chat_message',   # must match async def chat_message(...)
-                'message': message,
-                'username': username,
+                'type': 'chat_message',
+                'message': content,
+                'username': username
             }
         )
 
-    async def chat_message(self, event):
-        # debug log
-        print(f"Broadcasting message to {self.group_name}: {event['message']}")
-        await self.send(text_data=json.dumps({
-            'message': event['message'],
-            'username': event['username'],
-        }))
+    @database_sync_to_async
+    def save_message(self, user, project_id, content):
+        from projects.models import Project
+        project = Project.objects.get(id=project_id)
+        Message.objects.create(
+            project=project,
+            sender=user,
+            content=content
+        )

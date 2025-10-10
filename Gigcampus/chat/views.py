@@ -21,3 +21,21 @@ def chat_room(request, project_id):
     }
     
     return render(request, 'chat/chat_room.html', context)
+@login_required
+def chat_room(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    # Authorization checks here …
+    if request.method == "POST":
+        content = request.POST.get("content", "").strip()
+        if content:
+            Message.objects.create(
+                project=project,
+                sender=request.user,
+                content=content
+            )
+    messages = Message.objects.filter(project=project).order_by('timestamp')
+    return render(request, "chat/chat_room.html", {
+        "project": project,
+        "messages": messages,
+        "project_id": project_id,
+    })
